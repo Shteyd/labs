@@ -6,13 +6,13 @@ def options(yourChoice):
         result = someList[0]
         for i in someList:
             if i > result:
-                result = someList[i]
+                result = i
         return result
     if yourChoice == 2:
         result = someList[0]
         for i in someList:
             if i < result:
-                result = someList[i]
+                result = i
         return result
     if yourChoice == 3:
         result = 0
