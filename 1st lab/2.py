@@ -16,8 +16,8 @@ def options(yourChoice):
             if i % 2 == 0:
                 listOfEvenElements.append(someList[i])
         
-        print("".join(listOfEvenElements))
-    if yourChoice == 3:
+        print(" ".join(listOfEvenElements))
+    if yourChoice == 4:
         listOfEvenElements = []
         for i in range(0, len(someList)):
             if i % 2 == 1:
