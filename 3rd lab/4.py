@@ -1,8 +1,4 @@
-import string
+import re
 
-yourString = input("Введите строку: "); newString = yourString
-for i in list(yourString):
-    if i in string.punctuation:
-        newString = newString.replace(i, '')
-
-print("Символов:", len(yourString), "\nСлов:", len(newString.split()))
+user_str = input("Введите строку: ")
+print("Символов:", len(user_str), "\nСлов:", len(re.findall(r"\w+", user_str)))

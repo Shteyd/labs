@@ -7,26 +7,26 @@ def options(yourChoice):
         for i in my_string:
             if i[0:7] == '_Петров':
                 full_name = i.replace('_', '')
-                print('{0} {1} {2}'.format(full_name, my_string[id + 1], my_string[id + 2]))
+                print(f'{full_name} {my_string[id + 1]} {my_string[id + 2]}')
             id += 1
     if yourChoice == 2:
         for i in my_string:
             if i[0:2] == '21':
                 full_name = my_string[id - 1].replace('_', '')
-                print('{0} {1} {2}'.format(full_name, my_string[id], my_string[id + 1]))
+                print(f'{full_name} {my_string[id]} {my_string[id + 1]}')
             id += 1
     if yourChoice == 3:
         for i in my_string:
             if i[-4:] == 'года':
                 if int(i[:2]) > 21:
                     full_name = my_string[id - 1].replace('_', '')
-                    print('{0} {1} {2}'.format(full_name, my_string[id], my_string[id + 1]))
+                    print(f'{full_name} {my_string[id]} {my_string[id + 1]}')
             id += 1
     if yourChoice == 4:
         for i in my_string:
             if i[0:2] == '_A' or i[0:2] == '_Б':
                 full_name = i.replace('_', '')
-                print('{0} {1} {2}'.format(full_name, my_string[id + 1], my_string[id + 2]))
+                print(f'{full_name} {my_string[id + 1]} {my_string[id + 2]}')
             id += 1
 
 options(yourChoice)
