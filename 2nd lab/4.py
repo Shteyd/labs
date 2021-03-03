@@ -1,20 +1,17 @@
-from string import digits, ascii_letters
-
 yourChoice = int(input("Какой вариант вы хотите выбрать (1 / 2 / 3 / 4): "))
 
 def options(yourChoice):
-    letters = 'йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёЁ'
     yourLen = input("Введите строку: ")
     if yourChoice == 1:
         newLen = ''
         for i in yourLen:
-            if i in digits:
+            if i.isdigit() == True:
                 newLen += i
         return newLen
     if yourChoice == 2:
         newLen = ''
         for i in yourLen:
-            if i in ascii_letters or letters:
+            if i.isalpha() == True:
                 newLen += i
         return newLen
     if yourChoice == 3:
@@ -26,7 +23,9 @@ def options(yourChoice):
         newLenLetters = ''
         newLenDigits = ''
         for i in yourLen:
-            if i in digits:
+            if i == ' ':
+                continue
+            if i.isdigit() == True:
                 newLenDigits += i
             else:
                 newLenLetters += i

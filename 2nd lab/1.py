@@ -7,7 +7,7 @@ def options(yourChoice):
         while True:
             user_number = int(input("Введите число (0-100): "))
             if user_number < my_number:
-                print("my_number = {0}\nuser_number = {1}".format(my_number, user_number))
+                print(f"my_number = {my_number}\nuser_number = {user_number}")
                 break
             else:
                 print("Ещё раз")
@@ -15,7 +15,7 @@ def options(yourChoice):
         while True:
             user_number = int(input("Введите число (0-100): "))
             if user_number == my_number:
-                print("my_number = {0}\nuser_number = {1}".format(my_number, user_number))
+                print(f"my_number = {my_number}\nuser_number = {user_number}")
                 break
             else:
                 print("Ещё раз")
@@ -26,12 +26,12 @@ def options(yourChoice):
                 print("Ещё раз")
                 break
             else:
-                print("my_number = {0}\nuser_number = {1}".format(my_number, user_number))
+                print(f"my_number = {my_number}\nuser_number = {user_number}")
     if yourChoice == 4:
         while True:
             user_number = int(input("Введите число (0-100): "))
             if user_number > my_number:
-                print("my_number = {0}\nuser_number = {1}".format(my_number, user_number))
+                print(f"my_number = {my_number}\nuser_number = {user_number}")
                 break
             else:
                 print("Ещё раз")
