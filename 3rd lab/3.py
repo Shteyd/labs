@@ -1,32 +1,38 @@
+import re
+from prettytable import PrettyTable
+
 yourChoice = int(input("Какой вариант вы хотите выбрать (1 / 2 / 3 / 4): "))
 
 def options(yourChoice):
-    my_string = 'ФИО;Возраст;Категория;_Иванов Иван Иванович;23 года;Студент 3 курса;_Петров Семен Игоревич;22 года;Студент 2 курса;_Иванов Семен Игоревич;22 года;Студент 2 курса;_Акибов Ярослав Наумович;23 года;Студент 3 курса;_Борков Станислав Максимович;21 год;Студент 1 курса;_Петров Семен Семенович;21 год;Студент 1 курса;_Романов Станислав Андреевич;23 года;Студент 3 курса;_Петров Всеволод Борисович;21 год;Студент 2 курса'.split(';')
-    number_of_students = (len(my_string) - 3) / 3; id = 0
-    if yourChoice == 1:
-        for i in my_string:
-            if i[0:7] == '_Петров':
-                full_name = i.replace('_', '')
-                print(f'{full_name} {my_string[id + 1]} {my_string[id + 2]}')
-            id += 1
-    if yourChoice == 2:
-        for i in my_string:
-            if i[0:2] == '21':
-                full_name = my_string[id - 1].replace('_', '')
-                print(f'{full_name} {my_string[id]} {my_string[id + 1]}')
-            id += 1
-    if yourChoice == 3:
-        for i in my_string:
-            if i[-4:] == 'года':
-                if int(i[:2]) > 21:
-                    full_name = my_string[id - 1].replace('_', '')
-                    print(f'{full_name} {my_string[id]} {my_string[id + 1]}')
-            id += 1
-    if yourChoice == 4:
-        for i in my_string:
-            if i[0:2] == '_A' or i[0:2] == '_Б':
-                full_name = i.replace('_', '')
-                print(f'{full_name} {my_string[id + 1]} {my_string[id + 2]}')
-            id += 1
+    my_string = 'ФИО;Возраст;Категория;_Иванов Иван Иванович;23 года;Студент 3 курса;_Петров Семен Игоревич;22 года;Студент 2 курса;_Иванов Семен Игоревич;22 года;Студент 2 курса;_Акибов Ярослав Наумович;23 года;Студент 3 курса;_Борков Станислав Максимович;21 год;Студент 1 курса;_Петров Семен Семенович;21 год;Студент 1 курса;_Романов Станислав Андреевич;23 года;Студент 3 курса;_Петров Всеволод Борисович;21 год;Студент 2 курса'.split(';_')
+    students_table = PrettyTable()
+    for_fields_name = my_string[0].split(';')
+    students_table.field_names = [for_fields_name[i] for i in range(3)]
 
-options(yourChoice)
+    if yourChoice == 1:
+        for student in my_string:
+            if re.findall(f"Петров", student) != []:
+                students_table.add_row(student.split(';'))
+        return students_table
+    
+    if yourChoice == 2:
+        for student in my_string:
+            if re.findall(f"21\s", student) == ['21 ']:
+                students_table.add_row(student.split(';'))
+        return students_table
+
+    if yourChoice == 3:
+        for student in my_string:
+            number = re.findall(f"\d\d", student)
+            number = int(*number)
+            if number > 21:
+                students_table.add_row(student.split(';'))
+        return students_table
+
+    if yourChoice == 4:
+        for student in my_string:
+            if re.findall(f"^[АБ]\w+", student) != []:
+                students_table.add_row(student.split(';'))
+        return students_table
+
+print(options(yourChoice))
