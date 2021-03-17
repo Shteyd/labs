@@ -1,6 +1,6 @@
 print("Введите матрицу построчно (каждый элемент матрицы через пробел)"); i = 1; matrix = []; sum = 0
 while True:
-    print("{}-ая строка матрицы: ".format(i), end="")
+    print(f"{i}-ая строка матрицы: ", end="")
     some_matrix = list(map(int, input().split()))
     if some_matrix == []:
         break
@@ -9,4 +9,4 @@ while True:
     matrix.append(some_matrix)
     i += 1
 
-print("Ответы:\nМатрица: {0}\nСумма всех элементов матрицы: {1}".format(matrix, sum))
+print(f"Ответы:\nМатрица: {matrix}\nСумма всех элементов матрицы: {sum}")

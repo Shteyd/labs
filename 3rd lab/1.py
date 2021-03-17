@@ -1,7 +1,7 @@
 import re
 
 yourChoice = input("Какой вариант вы хотите выбрать (1 / 2 / 3 / 4): ")
-user_len = input()
+user_len = input("Введите строку: ")
 some_dict = {
     '1': ' '.join(re.findall(r'\b\w{1,5}\b', user_len)),
     '2': ' '.join(re.findall(r"Ли\w+", user_len)),

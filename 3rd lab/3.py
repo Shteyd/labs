@@ -11,19 +11,19 @@ def options(yourChoice):
 
     if yourChoice == 1:
         for student in my_string:
-            if re.findall(f"Петров", student) != []:
+            if re.findall(r"Петров", student) != []:
                 students_table.add_row(student.split(';'))
         return students_table
     
     if yourChoice == 2:
         for student in my_string:
-            if re.findall(f"21\s", student) == ['21 ']:
+            if re.findall(r"21\s", student) == ['21 ']:
                 students_table.add_row(student.split(';'))
         return students_table
 
     if yourChoice == 3:
         for student in my_string:
-            number = re.findall(f"\d\d", student)
+            number = re.findall(r"\d\d", student)
             number = int(*number)
             if number > 21:
                 students_table.add_row(student.split(';'))
@@ -31,7 +31,7 @@ def options(yourChoice):
 
     if yourChoice == 4:
         for student in my_string:
-            if re.findall(f"^[АБ]\w+", student) != []:
+            if re.findall(r"^[АБ]\w+", student) != []:
                 students_table.add_row(student.split(';'))
         return students_table
 

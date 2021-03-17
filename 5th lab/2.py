@@ -1,20 +1,26 @@
 import csv
 from prettytable import PrettyTable
 
-students_table = PrettyTable()
 
-students = []; count = 0
+yourChoice = int(input("Какой вариант вы хотите выбрать (1 / 2 / 3 / 4): "))
+students_table = PrettyTable()
+students = []
 
 with open("labs/5th lab/data/student.csv", "r", encoding='utf-8') as csvfile:
     student_reader = csv.reader(csvfile, delimiter=';')
     for row in student_reader:
-        if count == 0:
-            count += 1
-            continue
-        if int(row[2]) > 22:
-            students.append(row)
-        
+        students.append(row)
+
+students_table.field_names = students[0]
+del students[0]
+
+sorted_students = {
+    1: sorted(students, key=lambda person: person[1]),
+    2: sorted(students, key=lambda person: person[2]),
+    3: sorted(students, key=lambda person: person[3]),
+    4: [row for row in students if int(row[2]) > 22],
+}
+students_table.add_rows(sorted_students[yourChoice])
+
 print('\n\tИнформация о студентах: ')
-students_table.field_names = ["№", "ФИО", "Возраст", "Группа"]
-students_table.add_rows(students)
 print(students_table)
