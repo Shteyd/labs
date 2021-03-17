@@ -5,7 +5,7 @@ from prettytable import PrettyTable
 students_table = PrettyTable()
 students = []; groups = []
 
-with open("labs/5th lab/data/student.csv", "r", encoding='utf-8') as csvfile:
+with open("./data/student.csv", "r", encoding='utf-8') as csvfile:
     student_reader = csv.reader(csvfile, delimiter=';')
     for row in student_reader:
         groups.append(row[3])
@@ -55,7 +55,7 @@ yourChoice = input("Хотите ли вы сохранить изменения
 if yourChoice == 'N':
     print(students_table)
 else:
-    with open("labs/5th lab/data/student.csv", "w", encoding="utf-8", newline='') as fp:
+    with open("./data/student.csv", "w", encoding="utf-8", newline='') as fp:
         fp.truncate()
         writer = csv.writer(fp, delimiter=';')
         writer.writerow(['№', 'ФИО', 'Возраст', 'Группа'])
