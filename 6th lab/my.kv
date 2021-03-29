@@ -1,0 +1,93 @@
+#:kivy 2.0
+#:import MDLabel kivymd.label.MDLabel
+#:import MDTextField kivymd.textfields.MDTextFiekd
+#:import MDRaisedButton kivymd.button.MDRaisedButton
+
+# !!! Style !!!
+# Start
+
+<ItemLabel@MDLabel>:
+    font_size: '25sp'
+    halign: 'left'
+    valign: 'middle'
+    text_size: self.size
+
+<ItemBoxLayout@BoxLayout>:
+    orientation: 'vertical'
+
+# End
+
+
+<Container>:
+    rows: 3
+    padding: 50
+
+    text_input: text_input
+
+    salt: salt
+    nitro: nitro
+    dextrose: dextrose
+    starts: starts
+    time: time
+
+    AnchorLayout:
+        ancor_y: 'top'
+        size_hint:1, 0.2
+        padding: 30
+        MDTextField:
+            id: text_input
+            font_size: '45sp'
+            multiline: False
+            input_type: 'number'
+            input_filter: 'int'
+            hint_text: 'Масса в граммах'
+
+    
+    GridLayout:
+        cols: 2
+
+        ItemBoxLayout:
+            padding: [30, 0, 0, 0]
+            ItemLabel:
+                text: 'Соль'
+
+            ItemLabel:
+                text: 'Нитритная соль'
+
+            ItemLabel:
+                text: 'Моносахара'
+
+            ItemLabel:
+                text: 'Старты'
+
+            ItemLabel:
+                text: 'Время засолки'
+
+
+        ItemBoxLayout:
+            size_hint_x: 0.5
+            padding: [30, 0, 0, 0]
+            ItemLabel:
+                id: salt
+
+            ItemLabel:
+                id: nitro
+
+            ItemLabel:
+                id: dextrose
+
+            ItemLabel:
+                id: starts
+
+            ItemLabel:
+                id: time
+
+    BoxLayout:
+        size_hint: 1, 0.15
+        padding: [30, 0, 30, 20]
+        MDRaisedButton:
+            size_hint: 1, 0.9
+            text: 'Пуск'
+            font_size: '20sp'
+            on_release:
+                root.calculate()
