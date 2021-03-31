@@ -6,7 +6,7 @@ yourChoice = int(input("Какой вариант вы хотите выбрат
 students_table = PrettyTable()
 students = []
 
-with open("labs/5th lab/data/student.csv", "r", encoding='utf-8') as csvfile:
+with open("./data/student.csv", "r", encoding='utf-8') as csvfile:
     student_reader = csv.reader(csvfile, delimiter=';')
     for row in student_reader:
         students.append(row)

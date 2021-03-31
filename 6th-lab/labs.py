@@ -113,11 +113,15 @@ def lab4_4():
 
 # ! Пятый вариант
 def lab5_1():
-    return len(os.listdir(input("Dir: ")))
+    choice = input("Вы хотите ввести свою директорию: [Y]-Да [N]-Нет\n  > ")
+    if choice == 'Y':
+        return len(os.listdir(input("Введите директорию: ")))
+    else:
+        return len(os.listdir("C:\\Users\Shteyd\Downloads"))
 def lab5_2():
     students_table = PrettyTable()
     students = []
-    with open("labs/5th lab/data/student.csv", "r", encoding='utf-8') as csvfile:
+    with open("./data/student.csv", "r", encoding='utf-8') as csvfile:
         student_reader = csv.reader(csvfile, delimiter=';')
         for row in student_reader:
             students.append(row)
@@ -126,16 +130,16 @@ def lab5_2():
     del students[0]
     students_table.add_rows([row for row in students if int(row[2]) > 22])
     return students_table
-def lab5_3(students):
-    with open("labs/5th lab/data/student.csv", "w", encoding="utf-8", newline='') as fp:
+def rewrote_csv(students):
+    with open("./data/student.csv", "w", encoding="utf-8", newline='') as fp:
         fp.truncate()
         writer = csv.writer(fp, delimiter=';')
         writer.writerow(['№', 'ФИО', 'Возраст', 'Группа'])
         writer.writerows(students)
-def lab5_4():
+def lab5_3():
     students_table = PrettyTable()
     students = []; groups = []
-    with open("labs/5th lab/data/student.csv", "r", encoding='utf-8') as csvfile:
+    with open("./data/student.csv", "r", encoding='utf-8') as csvfile:
         student_reader = csv.reader(csvfile, delimiter=';')
         for row in student_reader:
             groups.append(row[3])
@@ -150,20 +154,20 @@ def lab5_4():
         if row[3] == group_choice:
             row[2] = int(row[2]) - 1
         students_table.add_row(row)
-    user_choice = input("Хотите ли вы сохранить изменения в .csv файле: [Y]-Да, [N]-Нет\t")
+    user_choice = input("Хотите ли вы сохранить изменения в .csv файле: [Y]-Да, [N]-Нет\n\t> ")
     if user_choice == 'N':
         return students_table
     else:
-        fifth_option.rewrote_csv(students)
+        rewrote_csv(students)
         return students_table
 
 
-def all_labs(idX, idY):
-    labs = [
-        [lab1_1, lab1_2, lab1_3, lab1_4],
-        [lab2_1, lab2_2, lab2_3, lab2_4],
-        [lab3_1, lab3_2, lab3_3, lab3_4],
-        [lab4_1, lab4_2, lab4_3, lab4_4],
-        [lab5_1, lab5_2, lab5_3, lab5_4]
-    ]
-    return labs[idX][idY]
+def all_labs(key):
+    labs = {
+        '1': lab1_1, '2': lab1_2, '3': lab1_3, '4': lab1_4,
+        '5': lab2_1, '6': lab2_2, '7': lab2_3, '8': lab2_4,
+        '9': lab3_1, '10': lab3_2, '11': lab3_3, '12': lab3_4,
+        '13': lab4_1, '14': lab4_2, '15': lab4_3, '16': lab4_4,
+        '17': lab5_1, '18': lab5_2, '19': lab5_3,
+    }
+    return labs.get(key)()
