@@ -6,11 +6,6 @@ students_list, counter = [], 0
 with open('./assets/students.csv', 'r', encoding='utf-8') as csv_file:
     students_reader = csv.reader(csv_file, delimiter=';')
     for row in students_reader:
-        if counter == 0:
-            row[0] = ' № '
-            header_list = row
-            counter += 1
-            continue
         students_list.append(row)
 
 
@@ -18,7 +13,6 @@ def save_data_CSV(students_list):
     with open("./assets/students.csv", "w", encoding="utf-8", newline='') as fp:
         fp.truncate()
         writer = csv.writer(fp, delimiter=';')
-        writer.writerow(['№', 'ФИО', 'Возраст', 'Группа1'])
         writer.writerows(students_list)
     sg.Popup('Данные успешно сохранены!', title='')
 
@@ -40,6 +34,7 @@ def add_new_student():
     for row in tableData:
         keys.append(row[0])
     while True:
+        check = 0
         student.append(sg.popup_get_text('Введите номер студента:', title=' '))
         if student[0] in keys:
             sg.popup('Такой ключ уже есть! Введите другой.', title=' ')
@@ -50,7 +45,15 @@ def add_new_student():
             'Введите возраст студента:', title=' '))
         student.append(sg.popup_get_text(
             'Введите группу студента:', title=' '))
-        break
+        for item in student:
+            if item == '':
+                sg.popup('Вы ввели не все данные! Попробуйте ещё раз.', title=' ')
+                check += 1; student.clear()
+                break
+        if check != 0:
+            continue
+        else:
+            break
     tableData.append(student)
     window.Element('-TABLE-').Update(values=tableData)
 
@@ -91,21 +94,28 @@ def change_data():
         break
     window.Element('-TABLE-').Update(values=tableData)
 
+sg.theme('DarkPurple6')
 
 funcs_column = [
-	[sg.Button('Добавить нового студента', size=(30, 10), key='-ADD-')],
-	[sg.Button('Изменение всех данных студента', size=(30, 10), key='-CHANGE-')],
-	[sg.Button('Удаление студента', size=(30, 10), key='-DELETE-')],
-	[sg.Button('Вывести информацию об студенте', size=(30, 10), key='-SHOW-')],
+	[sg.Button('Добавить нового студента', size=(30, 9), key='-ADD-', border_width=5)],
+	[sg.Button('Изменение всех данных студента', size=(30, 9), key='-CHANGE-', border_width=5)],
+	[sg.Button('Удаление студента', size=(30, 9), key='-DELETE-', border_width=5)],
+	[sg.Button('Вывести информацию об студенте', size=(30, 9), key='-SHOW-', border_width=5)],
+    [
+        sg.Button('Сохранить внесенные данные', key='-SAVE-'),
+        sg.Button('Выход', key='-EXIT-'),
+    ],
 ]
 
 students_table = [[sg.Table(
-    values=students_list,
-    headings=header_list,
+    values=students_list[1:],
+    headings=students_list[0],
     justification='center',
     num_rows=20,
     key='-TABLE-',
     row_height=35,
+    auto_size_columns=False,
+    col_widths=[5, 25, 7, 10],
     size=(250, 250)
 )]]
 
@@ -114,13 +124,13 @@ layout = [
         sg.Column(students_table),
         sg.Column(funcs_column)
     ],
-    [sg.Button('Сохранить внесенные данные', key='-SAVE-'),
-     sg.Button('Выход', key='-EXIT-')],
 ]
 
 
-window = sg.Window('Решатель девятой лабы Mark III',
-                   layout, element_justification='r')
+window = sg.Window('Cyberpuk 2077',
+                    layout,
+                    element_justification='r',
+                    alpha_channel=.9,)
 
 while True:
     event, values = window.read()

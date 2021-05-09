@@ -1,4 +1,50 @@
-from time import sleep
+import PySimpleGUI as sg
+
+
+sg.theme('DarkPurple6')
+
+
+def zero():
+    matrix_table = ''
+    for row in range(len(matrix)):
+        for item in range(len(matrix[row])):
+            matrix[row][item] = 0
+            matrix_table += f'0\t'
+        matrix_table += '\n\n\n'
+    window.Element('-MATRIX-').Update(matrix_table)
+
+
+def multi():
+    number = int(sg.popup_get_text('Введите число, на которое хотите умножить матрицу:', title=' '))
+    matrix_table = ''
+    for row in range(len(matrix)):
+        for item in range(len(matrix[row])):
+            matrix[row][item] *= number 
+            matrix_table += f'{matrix[row][item]}\t'
+        matrix_table += '\n\n\n'
+    window.Element('-MATRIX-').Update(matrix_table)
+
+
+def sum_items():
+    sum = 0
+    for row in matrix:
+        for item in row:
+            sum += item
+    sg.popup(f'Сумма всех элементов: {sum}', title=' ')
+
+
+def compare():
+    sumL = 0; sumH = 0
+    for row in matrix:
+        for item in row:
+            if item < 5:
+                sumL += item
+            else:
+                sumH += item
+    if sumL > sumH:
+        sg.popup(f'Сумма чисел < 5: {sumL}')
+    else:
+        sg.popup(f'Сумма чисел >= 5: {sumH}')
 
 
 matrix = [
@@ -12,63 +58,52 @@ matrix = [
     [2, 6, 3, 5, 1, 7, 3, 2],
 ]
 
-def close_program(key):
-    if key == '' or key == 'N':
-        print('Выход из программы...')
-        for _ in range(2):
-            sleep(0.5)
-            print('...')
-        exit()
+matrix_table = ''
 
-def multiplication():
-    multiplicationAll = 1
-    for row in matrix:
-        multiplication = 1
-        for item in row:
-            multiplication *= item; multiplicationAll *= item
-        print(f'Умножение элементов строки: {multiplication}')
-    return f'Умножение элементов всех строк: {multiplicationAll}'
+for row in matrix:
+    for item in row:
+        matrix_table += f'{item}\t'
+    matrix_table += '\n\n\n'
 
-def sumElements():
-    sum = 0
-    for row in matrix:
-        for item in row:
-            sum += item
-    return sum
+students_table = [[sg.Text(
+    text=matrix_table,
+    key='-MATRIX-'
+)]]
 
-def elementsSum():
-    sumL = 0; sumH = 0
-    for row in matrix:
-        for item in row:
-            if item < 5:
-                sumL += item
-            else:
-                sumH += item
-    if sumL > sumH:
-        return f'Сумма чисел < 5: {sumL}'
-    else:
-        return f'Сумма чисел >= 5: {sumH}'
+funcs_column = [
+	[sg.Button('Умножение по строкам', size=(30, 5), key='-MULTI-', border_width=5, )],
+	[sg.Button('Сумма всех элементов', size=(30, 5), key='-SUM-', border_width=5)],
+	[sg.Button('Сравнение сумм', size=(30, 5), key='-COMPARE-', border_width=5)],
+	[sg.Button('Замена всех элементов на 0', size=(30, 5), key='-ZERO-', border_width=5)],
+    [sg.Button('Выход', key='-EXIT-'),],
+]
 
-def Zero():
-    cot = 0
-    for row in matrix:
-        for count in range(len(row)):
-            row[count] = 0
-        matrix[cot] = row
-        cot += 1
-    return matrix
+layout = [
+    [
+        sg.Column(students_table),
+        sg.Column(funcs_column, element_justification='r')
+    ],
+]
 
-def call(key):
-    allFunc = {
-        '1': multiplication, '3': elementsSum,
-        '2': sumElements, '4': Zero
-    }
-    return allFunc.get(key)()
+
+window = sg.Window('Cyberpuk 2077',
+                    layout,
+                    element_justification='r',
+                    alpha_channel=.9,)
+
 
 while True:
-    print('\nСписок всех возможностей:\n\t1 - умножение по строкам\n\t2 - сложение всех элементов матрицы\n\t3 - сложения всех элементов матрицы меньших 5 и всех элементов матрицы больше или равных\n\t4 - замена значений всех элементов матрицы на 0')
-    key = input('\nВаш выбор:\n\t> ')
-    close_program(key)
-    print(call(key))
-    key = input('Вы хотите продолжить? [Y]-Yes [N]-No\n\t> ')
-    close_program(key)
+    event, values = window.read()
+    if event in [sg.WIN_CLOSED, '-EXIT-']:
+        break
+    elif event == '-MULTI-':
+        multi()
+    elif event == '-SUM-':
+        sum_items()
+    elif event == '-COMPARE-':
+        compare()
+    elif event == '-ZERO-':
+        zero()
+
+
+window.close()
