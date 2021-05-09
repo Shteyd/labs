@@ -1,74 +1,141 @@
 import csv
-from time import sleep
+import PySimpleGUI as sg
 
-students = {}
 
-with open("./data/students.csv", "r", encoding='utf-8') as csvfile:
-    student_reader = csv.reader(csvfile, delimiter=';')
-    for row in student_reader:
-        students[row[0]] = row[1:]
-
-del students['№']
-
-def writeCsv():
-    choice = input("Хотите ли вы сохранить изменения в .csv файле: [Y]-Да, [N]-Нет\t")
-    if choice != 'N':
-        with open("./data/students.csv", "w", encoding="utf-8", newline='') as fp:
-            fp.truncate()
-            writer = csv.writer(fp, delimiter=';')
-            writer.writerow(['№', 'ФИО', 'Возраст', 'Группа'])
-            for i in students.items():
-                row = list(i[0]) + i[1]
-                writer.writerow(row)
-                row.clear()
-
-def addStudent():
-    keys = list(students.keys())
-    while True:
-        id = input('Введите новый ID нового студента: ')
-        if id in keys:
-            print('Такой ID уже существует, введите другой')
+students_list, counter = [], 0
+with open('./assets/students.csv', 'r', encoding='utf-8') as csv_file:
+    students_reader = csv.reader(csv_file, delimiter=';')
+    for row in students_reader:
+        if counter == 0:
+            row[0] = ' № '
+            header_list = row
+            counter += 1
             continue
-        name = input('Введите ФИО нового студента: ')
-        age = input('Введите возраст нового студента: ')
-        group = input('Введите группу нового студента: ')
-        students[id] = [name, age, group]
+        students_list.append(row)
+
+
+def save_data_CSV(students_list):
+    with open("./assets/students.csv", "w", encoding="utf-8", newline='') as fp:
+        fp.truncate()
+        writer = csv.writer(fp, delimiter=';')
+        writer.writerow(['№', 'ФИО', 'Возраст', 'Группа1'])
+        writer.writerows(students_list)
+    sg.Popup('Данные успешно сохранены!', title='')
+
+
+def delete_student():
+    tableData = window.Element('-TABLE-').get()
+    key = sg.popup_get_text(
+        'Введите номер студента, которого хотите удалить', title=' ')
+    for row in tableData:
+        if row[0] == key:
+            tableData.remove(row)
+            break
+    window.Element('-TABLE-').Update(values=tableData)
+
+
+def add_new_student():
+    tableData = window.Element('-TABLE-').get()
+    keys, student = [], []
+    for row in tableData:
+        keys.append(row[0])
+    while True:
+        student.append(sg.popup_get_text('Введите номер студента:', title=' '))
+        if student[0] in keys:
+            sg.popup('Такой ключ уже есть! Введите другой.', title=' ')
+            student.clear()
+            continue
+        student.append(sg.popup_get_text('Введите ФИО студента:', title=' '))
+        student.append(sg.popup_get_text(
+            'Введите возраст студента:', title=' '))
+        student.append(sg.popup_get_text(
+            'Введите группу студента:', title=' '))
         break
-
-def changeData():
-    key = input('Введите ID студента: ')
-    name = input('Введите новое ФИО студента: ')
-    age = input('Введите новый возраст студента: ')
-    group = input('Введите новую группу студента: ')
-    students[key] = [name, age, group]
-
-def deleteData():
-    key = input('Введите ID студента: ')
-    del students[key]
-
-def printData():
-    key = input("Введите ID студента: ")
-    data = students.get(key)
-    print(f'ID: {key}\nФИО: {data[0]}\nВозраст: {data[1]}\nГруппа: {data[2]}')
-
-def funcs(key):
-    allFuncs = {'1': addStudent, '2': changeData, '3': deleteData, '4': printData,}
-    return allFuncs.get(key)()
+    tableData.append(student)
+    window.Element('-TABLE-').Update(values=tableData)
 
 
-print('\t\tСписок всех студентов: ')
-for ID in students:
-    print(f'\tID: {ID} -> Информация:', ', '.join(students.get(ID)))
+def show_student():
+    tableData = window.Element('-TABLE-').get()
+    key = sg.popup_get_text(
+        'Введите номер студента, которого хотите посмотреть', title=' ')
+    for row in tableData:
+        if row[0] == key:
+            text = f'Номер студента: {row[0]}\nФИО студента: {row[1]}\nВозраст студента: {row[2]}\nГруппа студента: {row[-1]}'
+            sg.popup(text, title=' ')
+
+
+def change_data():
+    tableData = window.Element('-TABLE-').get()
+    keys = []
+    key = sg.popup_get_text(
+        'Введите номер студента, которого хотите изменить', title=' ')
+    for row in tableData:
+        keys.append(row[0])
+    for counter in range(0, len(tableData)):
+        if tableData[counter][0] == key:
+            break
+
+    while True:
+        key = sg.popup_get_text(f'{key}  Введите номер студента:', title=' ')
+        if key in keys:
+            sg.popup('Такой ключ уже есть! Введите другой.', title=' ')
+            continue
+        tableData[counter][0] = key
+        tableData[counter][1] = sg.popup_get_text(
+            'Введите ФИО студента:', title=' ')
+        tableData[counter][2] = sg.popup_get_text(
+            'Введите возраст студента:', title=' ')
+        tableData[counter][3] = sg.popup_get_text(
+            'Введите группу студента:', title=' ')
+        break
+    window.Element('-TABLE-').Update(values=tableData)
+
+
+funcs_column = [
+	[sg.Button('Добавить нового студента', size=(30, 10), key='-ADD-')],
+	[sg.Button('Изменение всех данных студента', size=(30, 10), key='-CHANGE-')],
+	[sg.Button('Удаление студента', size=(30, 10), key='-DELETE-')],
+	[sg.Button('Вывести информацию об студенте', size=(30, 10), key='-SHOW-')],
+]
+
+students_table = [[sg.Table(
+    values=students_list,
+    headings=header_list,
+    justification='center',
+    num_rows=20,
+    key='-TABLE-',
+    row_height=35,
+    size=(250, 250)
+)]]
+
+layout = [
+    [
+        sg.Column(students_table),
+        sg.Column(funcs_column)
+    ],
+    [sg.Button('Сохранить внесенные данные', key='-SAVE-'),
+     sg.Button('Выход', key='-EXIT-')],
+]
+
+
+window = sg.Window('Решатель девятой лабы Mark III',
+                   layout, element_justification='r')
+
 while True:
-    print('-+'*24)
-    print('\t\tСписок команд:\n\t1 - Добавить нового студента\n\t2 - Изменить данные студента\n\t3 - Удаление студента\n\t4 - Вывести информацию о студенте')
-    key = input('\nВаш выбор:\n\t> ')
-    funcs(key)
-    writeCsv()
-    key = input('Вы хотите продолжить? [Y]-Yes [N]-No\n\t> ')
-    if key == '' or key == 'N':
-        print('Выход из программы...')
-        for _ in range(2):
-            sleep(0.5)
-            print('...')
-        exit()
+    event, values = window.read()
+    if event in [sg.WIN_CLOSED, '-EXIT-']:
+        break
+    elif event == '-SAVE-':
+        save_data_CSV(students_list)
+    elif event == '-DELETE-':
+        delete_student()
+    elif event == '-ADD-':
+        add_new_student()
+    elif event == '-SHOW-':
+        show_student()
+    elif event == '-CHANGE-':
+        change_data()
+
+
+window.close()
