@@ -1,118 +1,143 @@
-from kivy.uix.button import Button
-from database_work import get_data
-from kivymd.app import MDApp
-from kivy.uix.boxlayout import BoxLayout
-from kivymd.uix.screen import MDScreen
-from kivy.properties import ObjectProperty
-from kivymd.uix.list import MDList, ThreeLineListItem
-from kivy.uix.popup import Popup
-from kivy.uix.scrollview import ScrollView
-from kivy.uix.gridlayout import GridLayout
-from kivy.lang import Builder
+from delete_popup import delete_popup
+from update_popup import update_popup
+from add_popup import add_popup
+import re
+import csv
+import sqlite3
+import string
+import PySimpleGUI as sg
 
 
-from kivy.core.window import Window
-Window.size = (1280, 720)
+sg.theme('DarkPurple6')
+db = sqlite3.connect('./assets/products.db')
+cursor = db.cursor()
 
 
-custom_float_button = """
-MDFloatingActionButtonSpeedDial:
-    data: app.data
-    rotation_root_button: True
-    root_button_anim: True
-    icon: 'settings-outline'
-    callback: app.callback
-"""
-
-custom_text_input = """
-BoxLayout:
-    padding: 20
-    size_hint_y: None
-    MDTextField:
-        multiline: False
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        hint_text: "Введите цвет"
-        mode: "rectangle"
-"""
+def add_data():
+    querry = add_popup()
+    if querry != None:
+        cursor.execute(querry[0], querry[1])
+        db.commit()
 
 
-custom_flat_button = """
-BoxLayout:
-    padding: 20
-    size_hint_y: None
-    size_hint_x: 0.1
-    MDRectangleFlatButton:
-        text: "Поиск"
-        font_size: 16
-        pos_hint: {'center_x': .5, 'center_y': .45}
-        size: 1, 45
-"""
+def update_data():
+    querry = update_popup()
+    if querry != None:
+        cursor.execute(querry[0], querry[1])
+        db.commit()
 
 
+def del_data():
+    querry = delete_popup()
+    if querry != None:
+        cursor.execute(querry[0], querry[1])
+        db.commit()
 
-class MyApp(MDApp):
-    
-    data = {
-        'plus': 'Добавить',
-        'cloud': 'Изменить',
-        'trash-can-outline': 'Удалить',
-    }
-    
-    
-    def callback(self, instance):
-        if instance.icon == 'plus':
-            print('хуй')
-        elif instance.icon == 'cloud':
-            print('анал')
-        elif instance.icon == 'trash-can-outline':
-            content = Button(text='Close me!')
-            popup = Popup(content=content, auto_dismiss=False)
-            content.bind(on_press=popup.dismiss)
-            popup.open()
 
-    
-    def on_focus(instance, value):
-        if value:
-            print('User focused', instance)
+def color_statistics():
+    querry = """ SELECT colors.color_name FROM products INNER JOIN colors ON products.color_id = colors.color_id """
+    cursor.execute(querry)
+
+    colors = {}; colors_result = "Статистика по цветам:\n\n"
+    for row in cursor.fetchall():
+        if row[0] not in colors:
+            colors[row[0]] = 1
         else:
-            print('User defocused', instance)
-
-
+            colors[row[0]] += 1
     
-
-    def build(self):
-
-        self.theme_cls.primary_palette = 'Green'
-        self.theme_cls.theme_style = 'Dark'
-        
-        screen = MDScreen()
-        layout = GridLayout(cols=1)
-        row = BoxLayout(size_hint_y=None)
-        row_items = GridLayout(cols=2)
-        row_items.add_widget(Builder.load_string(custom_text_input))
-        row_items.add_widget(Builder.load_string(custom_flat_button))
-        row.add_widget(row_items)
-        layout.add_widget(row)
-        
-        
-        scroll = ScrollView()
-        list_view = MDList()
-        scroll.add_widget(list_view)
-        
-        db_data = get_data()
-        
-        for i in range(len(db_data)):
-            list_view.add_widget(ThreeLineListItem(text=f"{db_data[i][3]} {db_data[i][1]}", 
-                                            secondary_text=f"Цена: {str(db_data[i][2])}, {db_data[i][-2]}", 
-                                            tertiary_text=f"Цвет: {db_data[i][-1]}",
-                                            ))
-        
-        layout.add_widget(scroll)
-        screen.add_widget(layout)
-        screen.add_widget(Builder.load_string(custom_float_button))
-        
-        return screen
+    for key in colors:
+        colors_result += f'{key}: {colors[key]}\n'
+    
+    sg.Popup(colors_result, font=35)
 
 
-if __name__ == '__main__':
-    MyApp().run()
+def save_in_csv(products):
+    folderpath = sg.popup_get_folder('Перейдите в нужную директорию:')
+
+    if folderpath == None : return
+
+    filename = sg.popup_get_text('Введите название для .csv файла (по умолчанию products)\np.s.: Так же нельзя использовать спец. символы!')
+
+    if filename == None : return
+    if filename == '' : filename = 'products'
+    if folderpath == '' : folderpath = './assets'
+    if len(re.findall(f"""[{string.punctuation}]""", filename)) != 0 : return sg.popup('Введены спец. символы!')
+    
+    with open(f"{folderpath}/{filename}.csv", "w", encoding="utf-8", newline='') as csv_file:
+        csv_file.truncate()
+        writer = csv.writer(csv_file, delimiter=';')
+        writer.writerows(products)
+
+
+def get_all_data():
+    querry = """ SELECT products.product_id, product_name, price, types.type_name, existence.availability, colors.color_name FROM products INNER JOIN
+                        existence ON products.availability = existence.id INNER JOIN
+                        types ON products.type_id = types.type_id INNER JOIN
+                        colors ON products.color_id = colors.color_id """
+    cursor.execute(querry)
+    products = [list(row) for row in cursor.fetchall()]
+    return products
+
+products = get_all_data()
+
+table_column = [
+    [
+        sg.Table(
+            values=products,
+            headings=['Ключ', 'Имя', 'Цена', 'Тип', 'Наличие', 'Цвет'],
+            justification='center',
+            num_rows=20,
+            key='-TABLE-',
+            row_height=35,
+            auto_size_columns=False,
+            col_widths=[5, 25, 7, 10],
+            size=(250, 250)
+        )
+    ]
+]
+
+
+buttons_column = [
+    [sg.Button('Добавить данные', key='-ADD-', size=(30, 7))],
+    [sg.Button('Изменить данные', key='-UPDATE-', size=(30, 7))],
+    [sg.Button('Удалить данные', key='-DELETE-', size=(30, 7))],
+    [sg.Button('Цветная статистика', key='-COLOR-', size=(30, 7))],
+    [sg.Button('Сохранить в .csv', key='-CSV-', size=(30, 7))],
+    [sg.Button('Выход из программы', key='-EXIT-', size=(30, 7))]
+]
+
+
+layout = [
+    [
+        sg.Column(table_column),
+        sg.Column(buttons_column)
+    ]
+
+]
+
+window = sg.Window('11ая лаба', layout)
+
+while True:
+    event, values = window.read()
+    if event in [sg.WIN_CLOSED, '-EXIT-']:
+        break
+    elif event == '-ADD-':
+        add_data()
+        products = get_all_data()
+        window.Element('-TABLE-').update(values=products)
+    elif event == '-UPDATE-':
+        update_data()
+        products = get_all_data()
+        window.Element('-TABLE-').update(values=products)
+    elif event == '-DELETE-':
+        del_data()
+        products = get_all_data()
+        window.Element('-TABLE-').update(values=products)
+    elif event == '-CSV-':
+        save_in_csv(products)
+    elif event == '-COLOR-':
+        color_statistics()
+
+
+cursor.close()
+window.close()
