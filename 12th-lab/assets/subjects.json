@@ -1,0 +1,58 @@
+[
+    {
+        "subject_id": 1,
+        "name": "Алгебра",
+        "leactures": 90,
+        "practics": 90,
+        "coursework": true,
+        "independentwork": true
+    },
+    {
+        "subject_id": 2,
+        "name": "Дискретная математика",
+        "leactures": 36,
+        "practics": 72,
+        "coursework": true,
+        "independentwork": true
+    },
+    {
+        "subject_id": 3,
+        "name": "Английский язык",
+        "leactures": 0,
+        "practics": 144,
+        "coursework": false,
+        "independentwork": true
+    },
+    {
+        "subject_id": 4,
+        "name": "Математическая логика и теория алгоритмов",
+        "leactures": 72,
+        "practics": 72,
+        "coursework": true,
+        "independentwork": true
+    },
+    {
+        "subject_id": 5,
+        "name": "Математический анализ",
+        "leactures": 90,
+        "practics": 90,
+        "coursework": true,
+        "independentwork": true
+    },
+    {
+        "subject_id": 6,
+        "name": "Прикладные программные пакеты",
+        "leactures": 72,
+        "practics": 72,
+        "coursework": false,
+        "independentwork": true
+    },
+    {
+        "subject_id": 7,
+        "name": "Языки программирования",
+        "leactures": 90,
+        "practics": 90,
+        "coursework": true,
+        "independentwork": true
+    }
+]

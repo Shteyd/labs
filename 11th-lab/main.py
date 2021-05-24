@@ -140,4 +140,5 @@ while True:
 
 
 cursor.close()
+db.close()
 window.close()
