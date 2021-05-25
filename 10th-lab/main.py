@@ -71,7 +71,7 @@ students_table = [[sg.Text(
 )]]
 
 funcs_column = [
-	[sg.Button('Умножение по строкам', size=(30, 5), key='-MULTI-', border_width=5, )],
+	[sg.Button('Умножение по строкам', size=(30, 5), key='-MULTI-', border_width=5)],
 	[sg.Button('Сумма всех элементов', size=(30, 5), key='-SUM-', border_width=5)],
 	[sg.Button('Сравнение сумм', size=(30, 5), key='-COMPARE-', border_width=5)],
 	[sg.Button('Замена всех элементов на 0', size=(30, 5), key='-ZERO-', border_width=5)],
@@ -89,7 +89,7 @@ layout = [
 window = sg.Window('Cyberpuk 2077',
                     layout,
                     element_justification='r',
-                    alpha_channel=.9,)
+                    alpha_channel=0.95,)
 
 
 while True:
