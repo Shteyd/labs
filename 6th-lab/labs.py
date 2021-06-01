@@ -162,113 +162,12 @@ def lab5_3():
         return students_table
 
 
-# ! Седьмой вариант
-def lab7_1():
-    counter = 0; new_counter = 0
-    
-    some_dict = {
-        '1': '123',
-        2: '12134',
-        '3': [
-            '111',
-            {
-                11: 'afxcz',
-                '12': 123
-            },
-            {
-                13: 12323,
-                '14': {
-                    15: 123,
-                    '16': 12345,
-                },
-            }
-        ],
-        '4': {
-            '5': 123,
-            6: '567',
-        },
-        '7': 25257,
-        '8': {
-            '9': 123,
-            10: '567',
-        },
-    }
-    
-    def parseList(listName, new_counter):
-        for j in listName:
-            if type(j) == dict:
-                newDict = j
-                new_counter += parseDict(newDict, counter)
-        return new_counter
-    def parseDict(dictName, counter):
-        dictKeys = list(dictName.keys())
-        counter += len(dictKeys)
-        for i in range(len(dictName)):
-            if type(dictName.get(dictKeys[i])) == dict:
-                newDict = dictName.get(dictKeys[i])
-                counter = parseDict(newDict, counter)
-            if type(dictName.get(dictKeys[i])) == list:
-                listName = dictName.get(dictKeys[i])
-                counter += parseList(listName, new_counter)
-        return counter + new_counter
-    
-    return parseDict(some_dict, counter)
-def lab7_2():
-    students_table = PrettyTable()
-    students = {}
-
-    with open("./data/student.csv", "r", encoding='utf-8') as csvfile:
-        student_reader = csv.reader(csvfile, delimiter=';')
-        for row in student_reader:
-            students[row[0]] = row[1:]
-
-    students_table.field_names = students.get('№')
-    del students['№']
-    students_table.add_rows([students.get(key) for key in list(
-        students.keys()) if int(students.get(key)[1]) > 22])
-    
-    return students_table
-def lab7_3():
-    students_table = PrettyTable()
-    students = {}; row = []
-
-    with open("./data/student.csv", "r", encoding='utf-8') as csvfile:
-        student_reader = csv.reader(csvfile, delimiter=';')
-        for row in student_reader:
-            students[row[0]] = row[1:]
-
-    students_table.field_names = students.get('№')
-    del students['№']
-
-    for key in list(students.keys()):
-        student = students.get(key)
-        age = int(student[1]) - 1
-        student[1] = str(age)
-        students[key] = student
-
-    students_table.add_rows(students.values())
-
-    choice = input("Хотите ли вы сохранить изменения в .csv файле: [Y]-Да, [N]-Нет\t")
-    if choice == 'N':
-        return students_table
-    else:
-        with open("./data/student.csv", "w", encoding="utf-8", newline='') as fp:
-            fp.truncate()
-            writer = csv.writer(fp, delimiter=';')
-            writer.writerow(['№', 'ФИО', 'Возраст', 'Группа'])
-            for i in students.items():
-                row = list(i[0]) + i[1]
-                writer.writerow(row)
-                row.clear()
-        return students_table
-
 def all_labs(key):
     labs = {
         '1': lab1_1, '2': lab1_2, '3': lab1_3, '4': lab1_4,
         '5': lab2_1, '6': lab2_2, '7': lab2_3, '8': lab2_4,
         '9': lab3_1, '10': lab3_2, '11': lab3_3, '12': lab3_4,
         '13': lab4_1, '14': lab4_2, '15': lab4_3, '16': lab4_4,
-        '17': lab5_1, '18': lab5_2, '19': lab5_3,
-        '20': lab7_1, '21': lab7_2, '22': lab7_3,
+        '17': lab5_1, '18': lab5_2, '19': lab5_3
     }
     return labs.get(key)()

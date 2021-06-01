@@ -1,7 +1,7 @@
 yourChoice = int(input("Какой вариант вы хотите выбрать (1 / 2 / 3 / 4): "))
 
 def options(yourChoice):
-    yourLens = list(input("Введите несколько строк").split())
+    yourLens = input("Введите несколько строк: ").split()
     if yourChoice == 1:
         for i in yourLens:
             if 10 > len(i) > 5:

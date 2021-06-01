@@ -24,28 +24,39 @@ def close_program(choice):
 print(f"\033[32m {logo} \033[0m")
 
 while True:
-    print("""
-    Какую чать лабораторной работы вы хотите выбрать:
-        1) Второе задание; 2) Третье задание
-    """); choice = int(input("\tВаш выбор:\n\t\t> "))
-    if choice == 1:
-        while True:
-            print('''
-                        Список функций:
-                1 - ex1 | 4 - ex4 |  8 - ex8
-                2 - ex2 | 5 - ex5 |  9 - ex9
-                3 - ex3 | 6 - ex6 | 10 - ex10
-                        | 7 - ex7 | 
-            '''
-            ); choice = input('\tВаш выбор:\n\t\t> ')
-            students = all_ex(choice)
-            print(json.dumps(students, indent=4, sort_keys=True, ensure_ascii=False).encode('utf-8').decode())
-            choice = input('Вы хотите продолжить? [Y]-Yes [N]-No\n\t> ')
-            close_program(choice)
+    while True:
+        print("""
+Какую часть лабораторной работы вы хотите выбрать:
+    1) Второе задание; 2) Третье задание
+        """); choice = int(input("\tВаш выбор:\n\t\t> "))
+        if choice == 1:
+            while True:
+                print('''
+    Список функций:
+    1) Увеличить возраст студента (ФИО)
+    2) Изменить ФИО студента (ФИО)
+    3) Увеличить возраст студента (№)
+    4) Изменить группу студента (ФИО)
+    5) Удалить студента (№)
+    6) Уменьшить возраст студентов старше 22 лет
+    7) Удалить студентов в возрасте 23 лет
+    8) Увеличить возраст студентам с фамилией "Иванов"
+    9) Изменить фамилию "Иванов" на "Сидоров"
+    10) Поменять ФИО и группу местами
+    ----------------------------------
+    0 - Вернуться к предыдущему выбору
+                '''
+                ); choice = input('\t> ')
+                if choice == '0':
+                    break
+                students = all_ex(choice)
+                print(json.dumps(students, indent=4, sort_keys=True, ensure_ascii=False).encode('utf-8').decode())
+                choice = input('Вы хотите продолжить? [Y]-Yes [N]-No\n\t> ')
+                close_program(choice)
 
-    if choice == 2:
-        while True:
-            print("""
+        if choice == 2:
+            while True:
+                print("""
     Что вы хотите получить:
     1) Список студентов группы 'БО-111111'.
     2) Список студентов с номерами 1-10.
@@ -59,15 +70,15 @@ while True:
     10) Список студентов, если их номер группы заканчивается на «1».
     ----------------------------------
     0 - Вернуться к предыдущему выбору
-    """)
-            choice = int(input('\t> '))
+        """)
+                choice = int(input('\t> '))
 
-            if choice == 0:
-                break
-            else:
-                data = print_data(choice)
-                for row in data:
-                    print(row[0] + ") " + ', '.join(row[1]))
+                if choice == 0:
+                    break
+                else:
+                    data = print_data(choice)
+                    for row in data:
+                        print(row[0] + ") " + ', '.join(row[1]))
 
-            choice = input('Вы хотите продолжить? [Y]-Yes [N]-No\n\t> ')
-            close_program(choice)
+                choice = input('Вы хотите продолжить? [Y]-Yes [N]-No\n\t> ')
+                close_program(choice)

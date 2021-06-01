@@ -86,10 +86,10 @@ layout = [
 ]
 
 
-window = sg.Window('Cyberpuk 2077',
+window = sg.Window('10ая лаба',
                     layout,
                     element_justification='r',
-                    alpha_channel=0.95,)
+                    alpha_channel=0.9,)
 
 
 while True:

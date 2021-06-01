@@ -6,7 +6,7 @@ def four_or_five(students, key):
     data = []
     for item in students:
         item = item.get_data()
-        if item[-1] == key : data.append([item[0][0], item[1], f'{item[-1]:.3}'])
+        if item[-1] == key : data.append([item[0], item[1], f'{item[-1]:.3}'])
     
     if data == [] : return sg.popup('Таких учеников нет!')
     

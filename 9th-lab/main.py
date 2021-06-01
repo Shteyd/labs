@@ -25,6 +25,7 @@ def delete_student():
         if row[0] == key:
             tableData.remove(row)
             break
+    students_list[1:] = tableData
     window.Element('-TABLE-').Update(values=tableData)
 
 
@@ -55,6 +56,7 @@ def add_new_student():
         else:
             break
     tableData.append(student)
+    students_list[1:] = tableData
     window.Element('-TABLE-').Update(values=tableData)
 
 
@@ -80,11 +82,6 @@ def change_data():
             break
 
     while True:
-        key = sg.popup_get_text(f'{key}  Введите номер студента:', title=' ')
-        if key in keys:
-            sg.popup('Такой ключ уже есть! Введите другой.', title=' ')
-            continue
-        tableData[counter][0] = key
         tableData[counter][1] = sg.popup_get_text(
             'Введите ФИО студента:', title=' ')
         tableData[counter][2] = sg.popup_get_text(
@@ -92,6 +89,7 @@ def change_data():
         tableData[counter][3] = sg.popup_get_text(
             'Введите группу студента:', title=' ')
         break
+    students_list[1:] = tableData
     window.Element('-TABLE-').Update(values=tableData)
 
 sg.theme('DarkPurple6')
@@ -127,7 +125,7 @@ layout = [
 ]
 
 
-window = sg.Window('Cyberpuk 2077',
+window = sg.Window('9ая лаба',
                     layout,
                     element_justification='r',
                     alpha_channel=.9,)
