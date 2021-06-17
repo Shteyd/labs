@@ -95,7 +95,7 @@ def update_popup():
             break
         elif event == '-COLORS-':
             values = update_colors()
-            querry = """ UPDATE types
+            querry = """ UPDATE colors
                             SET color_name = ?
                         WHERE color_id = ? """, values
             break

@@ -16,7 +16,7 @@ def four_or_five(students, key):
                 values=data,
                 headings=['Студент', 'Группа', 'Ср. оценка'],
                 justification='l',
-                num_rows=20,
+                num_rows=10,
                 key='-TABLE-',
                 row_height=35,
                 auto_size_columns=False,

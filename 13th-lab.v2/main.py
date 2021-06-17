@@ -64,7 +64,7 @@ def add_animal():
         window = sg.Window('', layout)
         event, values = window.read()
         window.close()
-        if event == 'Cancel' or values[-1].isdigit() == False : return
+        if event == 'Cancel' or values[2].isdigit() == False : return
         elif event == 'Yes' : return [values[0].lower(), values[1], int(values[2])]
     
     animal = __add()

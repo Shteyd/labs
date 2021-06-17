@@ -31,7 +31,7 @@ def print_table(key, clsobj, fields):
                 values=data,
                 headings=fields,
                 justification='l',
-                num_rows=20,
+                num_rows=10,
                 key='-TABLE-',
                 row_height=35,
                 auto_size_columns=False,
